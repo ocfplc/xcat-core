@@ -5,11 +5,10 @@
 #            this whole dir into it somewhere (like /tmp).
 # Then run this script.  The optional 1st arg should be mcp if you are building against mcp.
 
-# Currently, *Fedora 23* is the only OS supported to build genesis-base for ppc64, and Centos 6.5 for x86_64
+# Currently, *Fedora 23* is the only OS supported to build genesis-base for ppc64, and Centos 7.2 for x86_64
 
 HOSTOS="$1"
 DIR=`dirname $0`
-#DIR=`realpath $DIR`
 DIR=`readlink -f $DIR`
 BUILDARCH=`uname -m`
 
@@ -66,13 +65,25 @@ cp $DIR/* $DRACUTMODDIR
 # Remove the ipr(IBM Power RAID) stuff when building on x86_64
 if [ $BUILDARCH = "x86_64" ]; then
     sed -i 's/dracut_install \/lib64\/libform.so.5//' $DRACUTMODDIR/install
-    sed -i 's/\/lib\/libtinfo.so.5.7/\/lib64\/libtinfo.so.5.7/' $DRACUTMODDIR/install
+    sed -i 's/\/lib\/libtinfo.so.5.7/\/lib64\/libtinfo.so.5.9/' $DRACUTMODDIR/install
     sed -i 's/\/lib64\/libpanel.so.5//' $DRACUTMODDIR/install
     sed -i 's/\/lib64\/libmenu.so.5//' $DRACUTMODDIR/install
     sed -i 's/\/lib64\/libsysfs.so.2//' $DRACUTMODDIR/install
     sed -i 's/\/usr\/sbin\/iprconfig//' $DRACUTMODDIR/install
     sed -i '/hwdb.bin/ d' $DRACUTMODDIR/install
     sed -i 's/instmods ipr//' $DRACUTMODDIR/installkernel
+    #
+    # Following changes are needed for CentOS7.X support
+    #
+    sed -i 's/\/lib64\/libnss_dns-2.12.so/\/usr\/lib64\/libnss_dns-2.17.so/' $DRACUTMODDIR/install
+    sed -i 's/\/lib64\/libnss_dns.so.2/\/usr\/lib64\/libnss_dns.so.2/' $DRACUTMODDIR/install
+    sed -i 's/\/lib\/libncurses.so.5.7/\/usr\/lib64\/libncurses.so.5.9/' $DRACUTMODDIR/install
+    sed -i 's/\/usr\/lib\/libstdc++.so.6.0.13/\/usr\/lib64\/libstdc++.so.6.0.19/' $DRACUTMODDIR/install
+    sed -i 's/\/lib\/libtinfo.so.5.7/\/usr\/lib64\/libtinfo.so.5.9/' $DRACUTMODDIR/install
+    sed -i 's/\/usr\/lib64\/libstdc++.so.5//' $DRACUTMODDIR/install
+    sed -i 's/\/usr\/lib64\/libsasl2.so.2/\/usr\/lib64\/libsasl2.so.3/' $DRACUTMODDIR/install
+    sed -i 's/\/lib\/terminfo\/l\/linux/\/usr\/share\/terminfo\/l\/linux/g' $DRACUTMODDIR/install
+    sed -i 's/\/lib\/terminfo\/v\/vt100/\/usr\/share\/terminfo\/v\/vt100/g' $DRACUTMODDIR/install
 fi
 if [ "$HOSTOS" = "mcp" ]; then
         #Special handlings for MCP PPC64 platform building.
@@ -151,12 +162,12 @@ elif [ $BUILDARCH = "ppc64" ]; then
         sed -i 's/\/lib\/libm.so.6/\/lib64\/libm.so.6/' $DRACUTMODDIR/install
         sed -i 's/\/lib\/libpthread.so.0/\/lib64\/libpthread.so.0/' $DRACUTMODDIR/install
         sed -i 's/\/lib64\/libncurses.so.5.7/\/lib64\/libncurses.so.5.9/' $DRACUTMODDIR/install
+        #
         # following changes are required on Fedora 22 ppc64
-        #sed -i 's/\/usr\/lib64\/libstdc++.so.6.0.13/\/usr\/lib64\/libstdc++.so.6.0.19/' $DRACUTMODDIR/install
+        #
         sed -i 's/\/usr\/lib64\/libstdc++.so.6.0.13/\/usr\/lib64\/libstdc++.so.6.0.21/' $DRACUTMODDIR/install
         sed -i 's/\/lib64\/libtinfo.so.5.7/\/lib64\/libtinfo.so.5.9/' $DRACUTMODDIR/install
         sed -i 's/\/usr\/lib64\/libsasl2.so.2/\/usr\/lib64\/libsasl2.so.3/' $DRACUTMODDIR/install
-        #sed -i 's/\/lib64\/libnss_dns-2.12.so/\/lib64\/libnss_dns-2.18.so/' $DRACUTMODDIR/install
         sed -i 's/\/lib\/terminfo\/l\/linux/\/usr\/share\/terminfo\/l\/linux/g' $DRACUTMODDIR/install
         sed -i 's/\/lib\/terminfo\/v\/vt100/\/usr\/share\/terminfo\/v\/vt100/g' $DRACUTMODDIR/install
 fi
