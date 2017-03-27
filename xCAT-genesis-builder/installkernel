@@ -14,3 +14,4 @@ instmods ipr # IBM Power RAID
 instmods i40e # Intel 40GbE
 instmods rtc-opal # For hardware clock
 instmods mlx5_core # For mellanox connect-IB adapter cards
+instmods hfi1 # Intel OPA Cards 

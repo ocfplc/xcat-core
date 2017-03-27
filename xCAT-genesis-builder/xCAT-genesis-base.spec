@@ -1,4 +1,4 @@
-%define version     %%REPLACE_CURRENT_VERSION%%
+%define version     2.13ocf
 Version: %{?version:%{version}}%{!?version:%(cat Version)}
 Release: %{?release:%{release}}%{!?release:snap%(date +"%Y%m%d%H%M")}
 %ifarch i386 i586 i686 x86

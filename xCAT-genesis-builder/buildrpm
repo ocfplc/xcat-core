@@ -187,7 +187,7 @@ fi
 if [ $BUILDARCH = "ppc64" ]; then
     dracut -m "xcat base" -N -f /tmp/xcatgenesis.$$.rfs $KERNELVERSION
 else
-    dracut -m "xcat base" -f /tmp/xcatgenesis.$$.rfs $KERNELVERSION
+    dracut -m "xcat base" -f /tmp/xcatgenesis.$$.rfs -d "`cat $DRACUTMODDIR/modules | xargs`" $KERNELVERSION
 fi
 
 if [ $? -ne 0 ]; then
@@ -197,7 +197,7 @@ fi
 
 echo Expanding the initramfs into /tmp/xcatgenesis.$$/opt/xcat/share/xcat/netboot/genesis/$BUILDARCH/fs ...
 cd /tmp/xcatgenesis.$$/opt/xcat/share/xcat/netboot/genesis/$BUILDARCH/fs 
-zcat /tmp/xcatgenesis.$$.rfs|cpio -dumi
+/usr/lib/dracut/skipcpio /tmp/xcatgenesis.$$.rfs | zcat | cpio -dumi
 
 if [ $? -ne 0 ]; then
     echo "ERROR - expanding the initramfs, please correct the issues and try again"
@@ -222,4 +222,4 @@ tar jcf ~/rpmbuild/SOURCES/xCAT-genesis-base-$BUILDARCH.tar.bz2 opt
 # build the rpm
 echo Building xCAT-genesis-base rpm from ~/rpmbuild/SOURCES/xCAT-genesis-base-$BUILDARCH.tar.bz2 and $DIR/xCAT-genesis-base.spec ...
 rpmbuild -ba $DIR/xCAT-genesis-base.spec 
-rm -rf $DRACUTMODDIR
+#rm -rf $DRACUTMODDIR
